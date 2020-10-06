@@ -1,17 +1,16 @@
 CC = gcc
 CFLAGS = -Wall -pedantic # Show all reasonable warnings
-LDFLAGS =
 
-all: overseer client
+all: job_sched
 	echo "Completed Successfully"
 
-fib: fibmain.o fib.o
+job_sched: client.o overseer.o
 
-fibmain.o: fibmain.c
+client.o: client.c
 
-fib.o: fib.c
+overseer.o: overseer.c
 
 clean:
-	rm -f fib *.o
+	rm -f job_sched *.o
 
 .PHONY: all clean
