@@ -11,7 +11,7 @@
 
 void* work(void* arg)
 {
-
+    printf("Hello world %d\n", arg);
 }
 
 int main(){
