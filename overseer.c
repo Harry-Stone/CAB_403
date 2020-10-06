@@ -1,23 +1,25 @@
 #include <stdio.h>
-#include <omp.h>
+//#include <omp.h>
+#include <pthread.h>
 
-int main(int argc, char *argv){
-    //#pragma omp parallel num_threads(5)
-    {
-        #pragma omp parallel 
-        printf("112");
+#define NUM_THREADS 20
+
+void* work(void* arg)
+{
+    printf("hello world\n");
+}
+
+
+int main(){
+    //#pragma omp parallel num_threads(NUM_THREADS)
+    //{
+        pthread_t pool[NUM_THREADS];
+
+        for(int i = 0;i  < NUM_THREADS;i++){
+            pthread_create(pool + i, NULL, work, NULL);
+        }
+        
         //int a =  omp_get_thread_num();
-        //#pragma omp parallel for
-        for( int i = 0; i < 5; i++){
-            i = i*i;
-            printf("Hello world 1 = %d\n", i);
-        }
-
-        //#pragma omp parallel for
-        for(int j = 0; j <10; j++){
-            j = j*2*j;
-            printf("Hello world 2 = %d\n", j);
-        }
         /*#pragma omp parallel for
         printf("Hello world 2\n");
         #pragma omp parallel for
@@ -32,6 +34,6 @@ int main(int argc, char *argv){
             printf("I is: %d\n", i);
             
         }*/
-    }
+    //}
     return 1;
 }
