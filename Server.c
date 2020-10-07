@@ -15,8 +15,6 @@
 #include <unistd.h>
 #include <time.h>
 
-#define MYPORT 54321 /* the port users will be connecting to */
-
 #define BACKLOG 10 /* how many pending connections queue will hold */
 
 int main(int argc, char *argv[])
@@ -25,15 +23,21 @@ int main(int argc, char *argv[])
     struct sockaddr_in my_addr;    /* my address information */
     struct sockaddr_in their_addr; /* connector's address information */
     socklen_t sin_size;
-
     time_t t = time(NULL);
     struct tm tim = *localtime(&t);
     /* generate the socket */
+    
     if ((sockfd = socket(AF_INET, SOCK_STREAM, 0)) == -1)
     {
         perror("socket");
         exit(1);
     }
+
+    if(argc != 2){
+        fprintf(stderr, "usage: <port number>\n");
+        exit(1);
+    }
+    int myport = atoi(argv[1]);
     /* Enable address/port reuse, useful for server development */
     int opt_enable = 1;
     setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, &opt_enable, sizeof(opt_enable));
@@ -44,7 +48,7 @@ int main(int argc, char *argv[])
 
     /* generate the end point */
     my_addr.sin_family = AF_INET;         /* host byte order */
-    my_addr.sin_port = htons(MYPORT);     /* short, network byte order */
+    my_addr.sin_port = htons(myport);     /* short, network byte order */
     my_addr.sin_addr.s_addr = INADDR_ANY; /* auto-fill with my IP */
 
     /* bind the socket to the end point */
