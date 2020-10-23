@@ -64,8 +64,8 @@ int main(int argc, char *argv[])
         }
     if (!fork())
         { /* this is the child process */
-        for(int i=0; i < sizeof(*argv); i++){
-            if (send(client_s, &argv[i], 14, 0) == -1)
+        //for(int i=0; i < sizeof(*argv); i++){
+            if (send(client_s, argv[3], 14, 0) == -1){
             perror("send");
             close(new_fd);
             exit(0);
