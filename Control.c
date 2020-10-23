@@ -12,12 +12,21 @@
 
 #define MAXDATASIZE 100 /* max number of bytes we can get at once */
 
-void sendMessage(int fd, const char *msg)
+void Send_Array_Data(int socket_id, char *myArray)
 {
-    int len = htonl(strlen(msg));
-    send(fd, &len, sizeof(len), 0);
-    send(fd, msg, len, 0);
+    int i = 0;
+    uint16_t stat;
+    for (int i = 0; i < sizeof(myArray); i++)
+    {
+        stat = htons(myArray[i]);
+        if (send(socket_id, &stat, 14, 0) == -1){
+            perror("send");
+            close(socket_id);
+            exit(0);
+        }
+    }
 }
+
 
 int main(int argc, char *argv[])
 {
@@ -64,18 +73,29 @@ int main(int argc, char *argv[])
         }
     if (!fork())
         { /* this is the child process */
-        //for(int i=0; i < sizeof(*argv); i++){
-            if (send(client_s, argv[3], 14, 0) == -1){
+        /*for(int i=1; i < sizeof(*argv); i++){
+            if (send(client_s, &argv[i], 14, 0) == -1){
             perror("send");
             close(new_fd);
             exit(0);
             }
+        }*/
+        /*for (int i = 0; i < sizeof(*argv); i++)
+        {
+            if (send(new_fd, argv, 14, 0) == -1){
+                perror("send");
+                close(new_fd);
+                exit(0);
+            }
+        }*/
+        Send_Array_Data(client_s, *argv);
+        printf("yes\n\n");
         }
         //close(new_fd); /* parent doesn't need this */
 
     //sendMessage(new_fd, "10221450");
 
-    if ((numbytes = recv(client_s, buf, MAXDATASIZE, 0)) == -1)
+    /*if ((numbytes = recv(client_s, buf, MAXDATASIZE, 0)) == -1)
         {
             perror("recv");
             exit(1);
@@ -83,7 +103,7 @@ int main(int argc, char *argv[])
 
         buf[numbytes] = '\0';
 
-        printf("Received: %s\n", buf);
+        printf("Received: %s\n", buf);*/
     close(client_s);
 
     return 0;

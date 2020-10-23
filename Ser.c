@@ -19,12 +19,33 @@
 
 #define MAXDATASIZE 100 /* max number of bytes we can get at once */
 
+char *Receive_Array_Int_Data(int socket_identifier, int size)
+{
+    int number_of_bytes, i = 0;
+    char statistics;
+
+    char *results = malloc(sizeof(int) * size);
+    for (i = 0; i < size; i++)
+    {
+        if ((number_of_bytes = recv(socket_identifier, &statistics, sizeof(uint16_t), 0)) == -1)
+        {
+            perror("recv");
+            exit(EXIT_FAILURE);
+        }
+        results[i] = (statistics);
+        
+    }
+    printf("HLEP\n");
+    printf("%s\n", results[0]);
+    return results;
+}
 
 int main(int argc, char *argv[])
 {
     int sockfd, new_fd, numbytes;            /* listen on sock_fd, new connection on new_fd */
     struct sockaddr_in my_addr;    /* my address information */
     struct sockaddr_in their_addr; /* connector's address information */
+    uint16_t statistics;
     char buf[MAXDATASIZE];
     socklen_t sin_size;
     time_t t = time(NULL);
@@ -88,20 +109,26 @@ int main(int argc, char *argv[])
                tm.tm_year + 1900, tm.tm_mon +1,tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec, inet_ntoa(their_addr.sin_addr));
         if (!fork())
         { /* this is the child process */
-            if (send(new_fd, "Hello, world!\n", 14, 0) == -1){
+            /*if (send(new_fd, "Hello, world!\n", 14, 0) == -1){
                 perror("send");
             close(new_fd);
             exit(0);
-            }
-            if ((numbytes = recv(new_fd, buf, MAXDATASIZE, 0)) == -1)
+            }*/
+            char *results = Receive_Array_Int_Data(new_fd, MAXDATASIZE);
+            printf("Yes\n");
+            //for (int i = 0; i < sizeof(results); i++)
+            //{
+                printf("Value of index = %s\n", results[1]);
+            //}
+            free(results);
+            /*if ((numbytes = recv(new_fd, &buf, MAXDATASIZE, 0)) == -1)
             {
                 perror("recv");
                 exit(1);
             }
 
             buf[numbytes] = '\0';
-
-            printf("Received: %s\n", buf);
+            printf("Received: %s\n", buf);*/
         }
         close(new_fd); /* parent doesn't need this */
 
