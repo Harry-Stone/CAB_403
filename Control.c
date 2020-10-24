@@ -10,29 +10,43 @@
 #include <arpa/inet.h>
 
 
-#define MAXDATASIZE 8 /* max number of bytes we can get at once */
-/*void Send_arr(int socket_id, char *Array[])
-#define MAXDATASIZE 10 /* max number of bytes we can get at once */
+#define MAXDATASIZE 100 /* max number of bytes we can get at once */
 
 void Send_Array_Data(int socket_id, char *myArray)
 {
-    char stat;
-    for(int i =0l i < MAXDATASIZE; i++)
+    int i = 0;
+    uint16_t stat;
+    for (int i = 0; i < sizeof(myArray); i++)
     {
-        stat = myArray[i];
-        send(socket_id, &stat, sizeof(char),0);
-    }
-}*/
-
-void excCommand(int sock_id, char *command[]){
-    for(int i = 3; i < 15; i++){
-    if(send(sock_id, command[i], strlen(command[i]), 0) < 0){
-        perror("send");
-            //close(sock_id);
+        stat = htons(myArray[i]);
+        if (send(socket_id, &stat, 14, 0) == -1){
+            perror("send");
+            close(socket_id);
             exit(0);
+        }
+    }
+}
+
+void send_command(int socket_id, char *command[]){
+    for(int i = 3; i < 15; i++){
+        char *ch = " ";
+        //char *try = command[i];
+        //strcat(try, ch);
+        //printf("please = %s", try);
+        //command[i] = strcat(command[i], " ");
+    if(send(socket_id, command[i], strlen(command[i]), 0) < 0){
+        perror("send");
+        close(socket_id);
+        exit(0);
+    }
+    if(send(socket_id, ch, strlen(ch), 0) < 0){
+        perror("send");
+        close(socket_id);
+        exit(0);
     }
     }
 }
+
 int main(int argc, char *argv[])
 {
     struct sockaddr_in serverAddr;
@@ -41,6 +55,7 @@ int main(int argc, char *argv[])
     struct hostent *he;
     struct sockaddr_in their_addr; /* connector's address information */
     socklen_t sin_size;
+
 
     int port = atoi(argv[2]);
     if ((he = gethostbyname(argv[1])) == NULL)
@@ -76,14 +91,13 @@ int main(int argc, char *argv[])
         }
     if (!fork())
         { /* this is the child process */
-        //printf("asdfasd = %d", sizeof(*argv));
+        printf("Forked");
         //for(int i=1; i < sizeof(*argv); i++){
-            /*if (send(client_s, argv[2], 14, 0) == -1){
-            perror("send");
-            close(new_fd);
-            exit(0);
-            }*/
-        excCommand(client_s, argv);
+          //  if (send(client_s, argv[2], 14, 0) == -1){
+            //perror("send");
+            //close(new_fd);
+            //exit(0);
+            //}
         //}
         /*for (int i = 0; i < sizeof(*argv); i++)
         {
@@ -92,8 +106,8 @@ int main(int argc, char *argv[])
                 close(new_fd);
                 exit(0);
             }
-        }*/
-        //Send_Array_Data(client_s, *argv);
+        }*/        
+        send_command(client_s, argv);
         printf("yes\n\n");
         }
         //close(new_fd); /* parent doesn't need this */

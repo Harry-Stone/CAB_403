@@ -17,8 +17,7 @@
 
 #define BACKLOG 10 /* how many pending connections queue will hold */
 
-#define MAXDATASIZE 10 /* max number of bytes we can get at once */
-
+#define MAXDATASIZE 100 /* max number of bytes we can get at once */
 
 void Receive_Array_Int_Data(int socket_identifier, int size)
 {
@@ -33,11 +32,11 @@ void Receive_Array_Int_Data(int socket_identifier, int size)
             perror("recv");
             exit(EXIT_FAILURE);
         }
-        results[i] = ntohs(statistics);
+        results[i] = (statistics);
     }
     for (i = 0; i < size; i++)
     {
-        printf("Array[%d] = %d\n", i, results[i]);
+        printf("%c", results[i]);
     }
 }
 
@@ -48,7 +47,7 @@ int main(int argc, char *argv[])
     struct sockaddr_in their_addr; /* connector's address information */
     uint16_t statistics;
     char buf[MAXDATASIZE];
-    char buff[MAXDATASIZE];
+    char reply[MAXDATASIZE];
     socklen_t sin_size;
     time_t t = time(NULL);
     struct tm tim = *localtime(&t);
@@ -116,20 +115,21 @@ int main(int argc, char *argv[])
             close(new_fd);
             exit(0);
             }*/
-            //char *results = Receive_Array_Int_Data(new_fd, MAXDATASIZE);
+            //printf("Yes2\n");
+            //Receive_Array_Int_Data(new_fd, MAXDATASIZE);
             //printf("Yes\n");
-            //for (int i = 0; i < sizeof(results); i++)
-            //{
-               // printf("Value of index = %s\n", results[1]);
-            //}
-            //free(results);
-            if ((numbytes = recv(new_fd, &buf, MAXDATASIZE, 0)) == -1)
+            /*for (int i = 0; i < MAXDATASIZE; i++)
+            {
+               printf("Value of index = %s\n", results[1]);
+            }
+            free(results);*/
+            if ((numbytes = recv(new_fd, buf, MAXDATASIZE, 0)) == -1)
             {
                 perror("recv");
                 exit(1);
             }
 
-            buf[numbytes] = '\0';
+            buf[numbytes]='\0';
             printf("Received: %s\n", buf);
         }
         close(new_fd); /* parent doesn't need this */
