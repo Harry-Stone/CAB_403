@@ -40,17 +40,24 @@ void Receive_Array_Int_Data(int socket_identifier, int size)
     }
 }
 
-char split_arg(arg[]){
-    int init_size = strlen(arg);
-    char space[] = " ";
+char* split_arg(char in[])
+{
+    int init_size = strlen(in);
+    char delim[] = " ";
 
-    char *ptr = strtok(str, delim);
+    char *ptr = strtok(in, delim);
 
+    char out[];
+    int i = 0;
     while(ptr != NULL)
     {
         printf("'%s'",ptr);
+        out[i] = ptr;
         ptr = strtok(NULL, delim);
+
+        i++;
     }
+    return out;
 }
 
 int main(int argc, char *argv[])
@@ -144,6 +151,7 @@ int main(int argc, char *argv[])
 
             buf[numbytes]='\0';
             printf("Received: %s\n", buf);
+            printf(split_arg(buf)[0])
         }
         close(new_fd); /* parent doesn't need this */
 
