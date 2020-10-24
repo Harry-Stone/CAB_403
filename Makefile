@@ -1,20 +1,19 @@
-CC = gcc
 CFLAGS = -Wall -pedantic # Show all reasonable warnings
 
-TARGETS = Control Ser
+TARGET1 = Ser
+TARGET2 = Control
 
-all: $(TARGETS)
-	echo "Completed Successfully"
+TARGETS = TARGET1 + TARGET2
+
+# all: $(TARGET1)
+# 	gcc -o $(TARGET1) $(TARGET1).o $(CFLAGS)
+# 	gcc -o $(TARGET2) $(TARGET2).o $(CFLAGS)
+
+$(TARGET1): $(TARGET1).c 
+	gcc -o $(TARGET1) $(TARGET1).o $(TARGET1).c $(CFLAGS)
+
+$(TARGET2): $(TARGET2).c 
+	gcc -o $(TARGET2) $(TARGET2).o $(TARGET2).c $(CFLAGS)
 
 clean:
 	for f in $(TARGETS); do rm -f $$f; rm -f $$f.o; done
-
-rebuild: clean all
-
-%.o : %.cleangcc -c $_-Wall -Werror
-
-Control: Control.o
-	gcc -o Control Control.o
-
-Ser: Ser.o
-	gcc -o Ser Ser.o
