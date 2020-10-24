@@ -10,24 +10,26 @@
 #include <arpa/inet.h>
 
 
-#define MAXDATASIZE 10 /* max number of bytes we can get at once */
-
-void Send_Array_Data(int socket_id, char *myArray)
+#define MAXDATASIZE 8 /* max number of bytes we can get at once */
+/*void Send_arr(int socket_id, char *Array[])
 {
-    int i = 0;
-    uint16_t stat;
-    for (int i = 0; i < sizeof(myArray); i++)
+    char stat;
+    for(int i =0l i < MAXDATASIZE; i++)
     {
-        stat = htons(myArray[i]);
-        if (send(socket_id, &stat, 14, 0) == -1){
-            perror("send");
-            close(socket_id);
+        stat = myArray[i];
+        send(socket_id, &stat, sizeof(char),0);
+    }
+}*/
+
+void excCommand(int sock_id, char *command[]){
+    for(int i = 3; i < 15; i++){
+    if(send(sock_id, command[i], strlen(command[i]), 0) < 0){
+        perror("send");
+            //close(sock_id);
             exit(0);
-        }
+    }
     }
 }
-
-
 int main(int argc, char *argv[])
 {
     struct sockaddr_in serverAddr;
@@ -36,8 +38,6 @@ int main(int argc, char *argv[])
     struct hostent *he;
     struct sockaddr_in their_addr; /* connector's address information */
     socklen_t sin_size;
-
-    printf("sss %s\n\n", argv[7]);
 
     int port = atoi(argv[2]);
     if ((he = gethostbyname(argv[1])) == NULL)
@@ -73,13 +73,14 @@ int main(int argc, char *argv[])
         }
     if (!fork())
         { /* this is the child process */
-        printf("Forked");
+        //printf("asdfasd = %d", sizeof(*argv));
         //for(int i=1; i < sizeof(*argv); i++){
-            if (send(client_s, argv[2], 14, 0) == -1){
+            /*if (send(client_s, argv[2], 14, 0) == -1){
             perror("send");
             close(new_fd);
             exit(0);
-            }
+            }*/
+        excCommand(client_s, argv);
         //}
         /*for (int i = 0; i < sizeof(*argv); i++)
         {
