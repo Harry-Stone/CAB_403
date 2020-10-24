@@ -114,15 +114,15 @@ int main(int argc, char *argv[])
             close(new_fd);
             exit(0);
             }*/
-            printf("Yes2\n");
-            Receive_Array_Int_Data(new_fd, MAXDATASIZE);
-            printf("Yes\n");
+            //printf("Yes2\n");
+            //Receive_Array_Int_Data(new_fd, MAXDATASIZE);
+            //printf("Yes\n");
             /*for (int i = 0; i < MAXDATASIZE; i++)
             {
                printf("Value of index = %s\n", results[1]);
             }
             free(results);*/
-            /*if ((numbytes = recv(new_fd, &buf, MAXDATASIZE, 0)) == -1)
+            if ((numbytes = recv(new_fd, &buf, MAXDATASIZE, 0)) == -1)
             {
                 perror("recv");
                 exit(1);
