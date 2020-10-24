@@ -10,7 +10,7 @@
 #include <arpa/inet.h>
 
 
-#define MAXDATASIZE 100 /* max number of bytes we can get at once */
+#define MAXDATASIZE 10 /* max number of bytes we can get at once */
 
 void Send_Array_Data(int socket_id, char *myArray)
 {
@@ -73,13 +73,14 @@ int main(int argc, char *argv[])
         }
     if (!fork())
         { /* this is the child process */
-        /*for(int i=1; i < sizeof(*argv); i++){
-            if (send(client_s, &argv[i], 14, 0) == -1){
+        printf("Forked");
+        //for(int i=1; i < sizeof(*argv); i++){
+            if (send(client_s, argv[2], 14, 0) == -1){
             perror("send");
             close(new_fd);
             exit(0);
             }
-        }*/
+        //}
         /*for (int i = 0; i < sizeof(*argv); i++)
         {
             if (send(new_fd, argv, 14, 0) == -1){
@@ -88,7 +89,7 @@ int main(int argc, char *argv[])
                 exit(0);
             }
         }*/
-        Send_Array_Data(client_s, *argv);
+        //Send_Array_Data(client_s, *argv);
         printf("yes\n\n");
         }
         //close(new_fd); /* parent doesn't need this */
