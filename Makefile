@@ -1,7 +1,7 @@
 CC = gcc
 CFLAGS = -Wall -pedantic # Show all reasonable warnings
 
-TARGETS = Control ser
+TARGETS = Control Ser
 
 all: $(TARGETS)
 	echo "Completed Successfully"
@@ -16,5 +16,5 @@ rebuild: clean all
 Control: Control.o
 	gcc -o Control Control.o
 
-ser: ser.o
-	gcc -o ser ser.o
+Ser: Ser.o
+	gcc -o Ser Ser.o
