@@ -1,16 +1,20 @@
 CC = gcc
 CFLAGS = -Wall -pedantic # Show all reasonable warnings
 
-all: job_sched
+TARGETS = Control ser
+
+all: $(TARGETS)
 	echo "Completed Successfully"
 
-job_sched: client.o overseer.o
-
-client.o: client.c
-
-overseer.o: overseer.c
-
 clean:
-	rm -f job_sched *.o
+	for f in $(TARGETS); do rm -f $$f; rm -f $$f.o; done
 
-.PHONY: all clean
+rebuild: clean all
+
+%.o : %.cleangcc -c $_-Wall -Werror
+
+Control: Control.o
+	gcc -o Control Control.o
+
+ser: ser.o
+	gcc -o ser ser.o
