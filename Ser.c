@@ -40,6 +40,19 @@ void Receive_Array_Int_Data(int socket_identifier, int size)
     }
 }
 
+char split_arg(arg[]){
+    int init_size = strlen(arg);
+    char space[] = " ";
+
+    char *ptr = strtok(str, delim);
+
+    while(ptr != NULL)
+    {
+        printf("'%s'",ptr);
+        ptr = strtok(NULL, delim);
+    }
+}
+
 int main(int argc, char *argv[])
 {
     int sockfd, new_fd, numbytes;            /* listen on sock_fd, new connection on new_fd */
