@@ -12,6 +12,9 @@
 
 #define MAXDATASIZE 8 /* max number of bytes we can get at once */
 /*void Send_arr(int socket_id, char *Array[])
+#define MAXDATASIZE 10 /* max number of bytes we can get at once */
+
+void Send_Array_Data(int socket_id, char *myArray)
 {
     char stat;
     for(int i =0l i < MAXDATASIZE; i++)

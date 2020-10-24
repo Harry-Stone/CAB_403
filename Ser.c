@@ -17,9 +17,10 @@
 
 #define BACKLOG 10 /* how many pending connections queue will hold */
 
-#define MAXDATASIZE 100 /* max number of bytes we can get at once */
+#define MAXDATASIZE 10 /* max number of bytes we can get at once */
 
-void *Receive_Array_Int_Data(int socket_identifier, int size)
+
+void Receive_Array_Int_Data(int socket_identifier, int size)
 {
     int number_of_bytes, i = 0;
     char statistics;
