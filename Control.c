@@ -8,6 +8,7 @@
 #include <sys/socket.h>
 #include <unistd.h>
 #include <arpa/inet.h>
+#include "userInteractions.h"
 
 
 #define MAXDATASIZE 100 /* max number of bytes we can get at once */
@@ -48,7 +49,19 @@ void send_command(int socket_id, char *command[]){
 }
 
 int main(int argc, char *argv[])
-{
+{   
+    //this prompts for correct use and shows help if requested
+    if(argc >= 2){
+        if(strcmp(argv[1], "--help")==0){
+            printHelp();
+            exit(1);
+        } 
+    }
+    if (argc < 3){
+        printf("not enough arguments provided. type: \"--help\" for information on correct use of the function\n");
+        exit(1);
+    }
+
     struct sockaddr_in serverAddr;
     int client_s, numbytes, new_fd;
     char buf[MAXDATASIZE];
