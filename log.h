@@ -14,7 +14,7 @@ char* getDate(){
     curtime = time (NULL);
     loc_time = localtime (&curtime); //convert time to local
     sprintf(buf,"%d-%02d-%02d %02d:%02d:%02d",loc_time->tm_year+1900,
-        loc_time->tm_mon,loc_time->tm_mday,loc_time->tm_hour,loc_time->tm_min,
+        loc_time->tm_mon+1,loc_time->tm_mday,loc_time->tm_hour,loc_time->tm_min,
         loc_time->tm_sec);
         
     printf("%s\n",buf);
