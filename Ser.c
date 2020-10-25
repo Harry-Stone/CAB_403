@@ -14,7 +14,7 @@
 #include <sys/wait.h>
 #include <unistd.h>
 #include <time.h>
-#include "logFunction.h"
+#include "log.h"
 
 #define BACKLOG 10 /* how many pending connections queue will hold */
 
@@ -38,7 +38,7 @@ void excFile(char *in, char arg[])
 
 int main(int argc, char *argv[])
 {
-    int sockfd, new_fd, numbytes, pid, ang;            /* listen on sock_fd, new connection on new_fd */
+    int sockfd, new_fd, numbytes, pid, ang, kid_pid;            /* listen on sock_fd, new connection on new_fd */
     struct sockaddr_in my_addr;    /* my address information */
     struct sockaddr_in their_addr; /* connector's address information */
     uint16_t statistics;
@@ -125,15 +125,15 @@ int main(int argc, char *argv[])
 
         pid_t process;
         process = fork();
-        if(process >= 0){
-            if(process==0){
-                //sleep(2);
-                ang = process;
-                excFile(split[0], *split);
-                
-            }
-            if(ang != 0){
-            }
+        if(process==0){
+            //sleep(2);
+            kid_pid = getpid();
+            excFile(split[0], *split);
+            
+        }
+        else{
+            wait(NULL);
+            printf("%s - %s %s has been excevuted with pid %d\n", getDate(), split[0], split[1], kid_pid);
         }
         close(new_fd); /* parent doesn't need this */
 
