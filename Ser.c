@@ -45,7 +45,6 @@ void excFile(char *filename)
             perror("execute woopsy: ");
             exit(1);
         }
-        close
         /*int number;
         FILE* in_file = fopen(filename,"r");
         printf("file is open\n");
@@ -155,25 +154,16 @@ int main(int argc, char *argv[])
         printf("%d-%02d-%02d %02d:%02d:%02d server: got connection from %s\n",
                tm.tm_year + 1900, tm.tm_mon +1,tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec, inet_ntoa(their_addr.sin_addr));
         char *name = "num";
-        excFile(name);
-        if (!fork())
+        pid_t process;
+        process = fork();
+        if(process==0){
+            excFile(name);
+        }
+        if (process != 0)
         { /* this is the child process */
 
             char *input;
             input = Receive_Array_Int_Data(new_fd);
-            /*if (send(new_fd, "Hello, world!\n", 14, 0) == -1){
-                perror("send");
-            close(new_fd);
-            exit(0);
-            }*/
-            //printf("Yes2\n");
-            //Receive_Array_Int_Data(new_fd, MAXDATASIZE);
-            //printf("Yes\n");
-            /*for (int i = 0; i < MAXDATASIZE; i++)
-            {
-               printf("Value of index = %s\n", results[1]);
-            }
-            free(results);*/
             if ((numbytes = recv(new_fd, buf, MAXDATASIZE, 0)) == -1)
             {
                 perror("recv");
@@ -192,10 +182,6 @@ int main(int argc, char *argv[])
                 ptr = strtok(NULL," ");
             }
             printf("%s\n",split[1]);
-
-
-
-            printf(split_arg(buf)[0])
 
         }
         close(new_fd); /* parent doesn't need this */
