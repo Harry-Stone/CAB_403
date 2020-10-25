@@ -17,7 +17,7 @@ char* getDate(){
         loc_time->tm_mon+1,loc_time->tm_mday,loc_time->tm_hour,loc_time->tm_min,
         loc_time->tm_sec);
         
-    printf("%s\n",buf);
+    //printf("%s\n",buf);
     // return asctime(loc_time);
 
     return buf;
@@ -29,13 +29,13 @@ int writeLog(char* message,char* logFileAddress){
     char* date = getDate();
     printf("%s:%s\n", date, message);
 
-    if(logEnabled != 0){
+    //if(logEnabled != 0){
         FILE *logFile;
         date[strlen(date) - 1] = 0;//kill the automatic new line on the end of the date
         logFile = fopen(logFileAddress, "a");
         fprintf(logFile, "%s:%s\n", date, message);
         fclose(logFile);
-    }
+    //}
     
     free(date);
     return 1;

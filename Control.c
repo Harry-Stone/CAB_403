@@ -40,11 +40,11 @@ void send_command(int socket_id, char *command[]){
         close(socket_id);
         exit(0);
     }
-    if(send(socket_id, ch, strlen(ch), 0) < 0){
+    /*if(send(socket_id, ch, strlen(ch), 0) < 0){
         perror("send");
         close(socket_id);
         exit(0);
-    }
+    }*/
     }
 }
 

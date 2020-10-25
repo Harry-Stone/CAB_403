@@ -10,12 +10,16 @@
 #include <unistd.h>
 #include <time.h>
 
-int find_file(char *in[]){
-    printf("%s\n", in[0]);
+
+char *splits(char* buff[]){
     int i = 0;
-    while(strcmp(in[i], "-o") == 0||strcmp(in[i], "-log")==0||strcmp(in[i], "-t")==0){
-        i +=2;
-        printf("%s inside the boi\n",in[i]);
+    char delim[] = " ";
+    char *ptr = strtok(buff, delim);
+    char *split = malloc(20);
+    while (ptr != NULL)
+    {
+        split[i++] = ptr;
+        ptr = strtok(NULL, delim);
     }
-    return i;
+    return split;
 }
