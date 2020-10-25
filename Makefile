@@ -3,17 +3,18 @@ CFLAGS = -Wall -pedantic # Show all reasonable warnings
 TARGET1 = Ser
 TARGET2 = Control
 
-TARGETS = TARGET1 + TARGET2
+TARGETS = Ser Control
 
 # all: $(TARGET1)
 # 	gcc -o $(TARGET1) $(TARGET1).o $(CFLAGS)
 # 	gcc -o $(TARGET2) $(TARGET2).o $(CFLAGS)
+all: $(TARGET1) $(TARGET2)
 
 $(TARGET1): $(TARGET1).c 
-	gcc -o $(TARGET1) $(TARGET1).o $(TARGET1).c $(CFLAGS)
+	gcc $(TARGET1).c -o $(TARGET1) $(CFLAGS)
 
 $(TARGET2): $(TARGET2).c 
-	gcc -o $(TARGET2) $(TARGET2).o $(TARGET2).c $(CFLAGS)
+	gcc $(TARGET2).c -o $(TARGET2) $(CFLAGS)
 
 clean:
-	for f in $(TARGETS); do rm -f $$f; rm -f $$f.o; done
+	@for f in $(TARGETS); do rm -f $$f; rm -f $$f.o; done

@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include "log.h"
 
 void printHelp(){
     printf("\nCorrect usage of the function is as follows:");
@@ -54,6 +55,13 @@ int validateInputs(int argc, char *argv[]){
         }
     } else {
         mode = 1;
+        //loop through to see if -log is wanted
+        for(int i=0; i<argc; i++){
+            if(strcmp(argv[i],"-log")==0 && i<argc-1){
+                logEnabled=1;
+                logFileAddress = argv[i+1];
+            }
+        }
     }
 
     return mode;
