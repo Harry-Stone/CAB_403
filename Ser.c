@@ -14,12 +14,11 @@
 #include <sys/wait.h>
 #include <unistd.h>
 #include <time.h>
-#include "find_file.h"
 #include "log.h"
 
 #define BACKLOG 10 /* how many pending connections queue will hold */
 
-#define MAXDATASIZE 50 /* max number of bytes we can get at once */
+#define MAXDATASIZE 100 /* max number of bytes we can get at once */
 
 void excFile(char *in, char arg[])
 {
@@ -43,8 +42,8 @@ int main(int argc, char *argv[])
     struct sockaddr_in my_addr;    /* my address information */
     struct sockaddr_in their_addr; /* connector's address information */
     uint16_t statistics;
+    char buf[MAXDATASIZE];
     char reply[MAXDATASIZE];
-    char reply2[MAXDATASIZE+1];
     int number_of_bytes;
     socklen_t sin_size;
 
@@ -73,7 +72,7 @@ int main(int argc, char *argv[])
     /* generate the end point */
     my_addr.sin_family = AF_INET;         /* host byte order */
     my_addr.sin_port = htons(myport);     /* short, network byte order */
-    my_addr.sin_addr.s_addr = htonl(INADDR_ANY); /* auto-fill with my IP */
+    my_addr.sin_addr.s_addr = INADDR_ANY; /* auto-fill with my IP */
 
     /* bind the socket to the end point */
     if (bind(sockfd, (struct sockaddr *)&my_addr, sizeof(struct sockaddr)) == -1)
@@ -104,61 +103,32 @@ int main(int argc, char *argv[])
         }
         printf("%s server: got connection from %s\n", getDate(), inet_ntoa(their_addr.sin_addr));
         char *name = "num";
-        int recieve = 1;
-        
-        for(int i = 3; i < 15; i++){
-            char buf[MAXDATASIZE];
+ 
             if ((number_of_bytes = recv(new_fd, buf, MAXDATASIZE, 0)) == -1)
                 {
                     perror("recv");
                     exit(1);
                 }
-                buf[number_of_bytes]='\0';
-                printf("%s Received: %s\n", getDate(), buf);
-                //strcat(reply, buf);
-                //strcat(reply, " ");
-        }
 
-        char* c_reply = strdup(reply);
+            buf[number_of_bytes]='\0';
+            printf("%s Received: %s\n", getDate(), buf);
 
-        /*int size_of = 0;
-        /*for(int i = 0; i < strlen(c_reply); i++){
-            if(c_reply[i] == ' '){
-                size_of++;
-            }
-        }
-
-        /*char** s_reply = calloc(size_of, sizeof(char*));
-
-        /*char* token = strtok(c_reply, " ");
-
-        int o = 0;
-        while(token != NULL){
-            s_reply[o] = calloc(strlen(token)+1, sizeof(char));
-            strcpy(s_reply[o], token);
-            o++;
-            token = strtok(NULL, " ");
-        }
-
-        s_reply[size_of] = NULL;*/
-        printf("%s Received: %s\n", getDate(), reply);
-        pid_t process;
-        process = fork();
-        if(process==0){
-
-            /*int i = 0;
-            char* rest = reply;
+            int i = 0;
             char delim[] = " ";
-            char *ptr = strtok(rest, " ");
+            char *ptr = strtok(buf, delim);
             char *split[100];
             while (ptr != NULL)
             {
                 split[i++] = ptr;
                 ptr = strtok(NULL, delim);
-            }*/
+            }
 
-            /*kid_pid = getpid();
-            excFile(split[0], *split);*/
+        pid_t process;
+        process = fork();
+        if(process==0){
+            //sleep(2);
+            kid_pid = getpid();
+            excFile(split[0], *split);
             
         }
         else{
