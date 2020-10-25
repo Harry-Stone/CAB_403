@@ -19,31 +19,54 @@
 
 #define MAXDATASIZE 100 /* max number of bytes we can get at once */
 
-void Receive_Array_Int_Data(int socket_identifier, int size)
+char *Receive_Array_Int_Data(int socket_identifier)
 {
-    int number_of_bytes, i = 0;
-    char statistics;
+    int number_of_bytes;
+    char buf[MAXDATASIZE];
 
-    char *results = malloc(sizeof(int) * size);
-    for (i = 0; i < size; i++)
+    if ((number_of_bytes = recv(socket_identifier, buf, MAXDATASIZE, 0)) == -1)
+            {
+                perror("recv");
+                exit(1);
+            }
+
+            buf[number_of_bytes]='\0';
+            printf("Received: %s\n", buf);
+    return buf;
+}
+
+void excFile(char *filename)
+{
+    if(access(filename, F_OK) != -1)
     {
-        if ((number_of_bytes = recv(socket_identifier, &statistics, sizeof(uint16_t), 0)) == -1)
+        char * address = gethostname();
+        char 
+        (execl(buf, basename(buf), res, NULL) == -1)
+        /*int number;
+        FILE* in_file = fopen(filename,"r");
+        printf("file is open\n");
+        if(! in_file)
         {
-            perror("recv");
-            exit(EXIT_FAILURE);
+            printf("Oops, file cant be read\n");
+            exit(-1);
         }
-        results[i] = (statistics);
-    }
-    for (i = 0; i < size; i++)
+
+        c = fgetc(in_file);
+        while(c != EOF)
+        {
+            printf("We just read %c", c);
+            c = fgetc(in_file);
+        }
+        fclose(in_file);*/
+    }   else 
     {
-        printf("%c", results[i]);
+        printf("%s doesnt exist", filename);
     }
 }
 
-char* split_arg(char in[])
-{
-    int init_size = strlen(in);
-    char delim[] = " ";
+/*char split_arg(arg[]){
+    int init_size = strlen(arg);
+    char space[] = " ";
 
     char *ptr = strtok(in, delim);
 
@@ -57,12 +80,11 @@ char* split_arg(char in[])
 
         i++;
     }
-    return out;
-}
+}*/
 
 int main(int argc, char *argv[])
 {
-    int sockfd, new_fd, numbytes;            /* listen on sock_fd, new connection on new_fd */
+    int sockfd, new_fd, numbytes, pid;            /* listen on sock_fd, new connection on new_fd */
     struct sockaddr_in my_addr;    /* my address information */
     struct sockaddr_in their_addr; /* connector's address information */
     uint16_t statistics;
@@ -128,8 +150,13 @@ int main(int argc, char *argv[])
         }
         printf("%d-%02d-%02d %02d:%02d:%02d server: got connection from %s\n",
                tm.tm_year + 1900, tm.tm_mon +1,tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec, inet_ntoa(their_addr.sin_addr));
+        char *name = "num.exe";
+        excFile(name);
         if (!fork())
         { /* this is the child process */
+
+            char *input;
+            input = Receive_Array_Int_Data(new_fd);
             /*if (send(new_fd, "Hello, world!\n", 14, 0) == -1){
                 perror("send");
             close(new_fd);
@@ -163,6 +190,8 @@ int main(int argc, char *argv[])
             printf("%s\n",split[1]);
 
 
+
+            printf(split_arg(buf)[0])
 
         }
         close(new_fd); /* parent doesn't need this */
