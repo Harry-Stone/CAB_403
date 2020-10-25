@@ -14,17 +14,40 @@
 #include <sys/wait.h>
 #include <unistd.h>
 #include <time.h>
+#include "log.h"
 
 #define BACKLOG 10 /* how many pending connections queue will hold */
 
+#define MAXDATASIZE 100 /* max number of bytes we can get at once */
+
+void excFile(char *in, char arg[])
+{
+    if(access(in, F_OK) != -1)
+    {
+        printf("%s attempting to execute %s\n", getDate(), in);
+        char* path = realpath(in, NULL);
+        if(execl(path, path, arg, NULL) == -1){
+            perror("exec: ");
+            exit(1);
+        }
+    }   else 
+    {
+        printf("%s doesnt exist\n", in);
+    }
+}
+
 int main(int argc, char *argv[])
 {
-    int sockfd, new_fd;            /* listen on sock_fd, new connection on new_fd */
+    int sockfd, new_fd, numbytes, pid, ang, kid_pid;            /* listen on sock_fd, new connection on new_fd */
     struct sockaddr_in my_addr;    /* my address information */
     struct sockaddr_in their_addr; /* connector's address information */
+    uint16_t statistics;
+    char buf[MAXDATASIZE];
+    char reply[MAXDATASIZE];
+    int number_of_bytes;
     socklen_t sin_size;
-    time_t t = time(NULL);
-    struct tm tim = *localtime(&t);
+
+    char *split[10];
     /* generate the socket */
     
     if ((sockfd = socket(AF_INET, SOCK_STREAM, 0)) == -1)
@@ -65,14 +88,12 @@ int main(int argc, char *argv[])
         exit(1);
     }
     
-    printf("%d-%02d-%02d %02d:%02d:%02d server starts listening ...\n", tim.tm_year + 1900, tim.tm_mon +1,tim.tm_mday, tim.tm_hour, tim.tm_min, tim.tm_sec);
+    printf("%s server starts listening ...\n", getDate());
 
     /* repeat: accept, send, close the connection */
     /* for every accepted connection, use a sepetate process or thread to serve it */
     while (1)
     { /* main accept() loop */
-        time_t t = time(NULL);
-        struct tm tm = *localtime(&t);
         sin_size = sizeof(struct sockaddr_in);
         if ((new_fd = accept(sockfd, (struct sockaddr *)&their_addr,
                              &sin_size)) == -1)
@@ -80,14 +101,38 @@ int main(int argc, char *argv[])
             perror("accept");
             continue;
         }
-        printf("%d-%02d-%02d %02d:%02d:%02d server: got connection from %s\n",
-               tm.tm_year + 1900, tm.tm_mon +1,tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec, inet_ntoa(their_addr.sin_addr));
-        if (!fork())
-        { /* this is the child process */
-            if (send(new_fd, "Hello, world!\n", 14, 0) == -1)
-                perror("send");
-            close(new_fd);
-            exit(0);
+        printf("%s server: got connection from %s\n", getDate(), inet_ntoa(their_addr.sin_addr));
+        char *name = "num";
+
+            if ((number_of_bytes = recv(new_fd, buf, MAXDATASIZE, 0)) == -1)
+                {
+                    perror("recv");
+                    exit(1);
+                }
+            buf[number_of_bytes]='\0';
+            printf("%s Received: %s\n", getDate(), buf);
+
+            int i = 0;
+            char delim[] = " ";
+            char *ptr = strtok(buf, delim);
+            char *split[100];
+            while (ptr != NULL)
+            {
+                split[i++] = ptr;
+                ptr = strtok(NULL, delim);
+            }
+
+        pid_t process;
+        process = fork();
+        if(process==0){
+            //sleep(2);
+            kid_pid = getpid();
+            excFile(split[0], *split);
+            
+        }
+        else{
+            wait(NULL);
+            printf("%s - %s %s has been excevuted with pid %d\n", getDate(), split[0], split[1], kid_pid);
         }
         close(new_fd); /* parent doesn't need this */
 
