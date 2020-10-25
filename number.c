@@ -16,5 +16,5 @@
 #include <time.h>
 
 int main(){
-    printf("1234\n");
+    printf("num is 1234\n");
 }

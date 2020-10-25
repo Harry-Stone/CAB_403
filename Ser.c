@@ -19,71 +19,32 @@
 
 #define MAXDATASIZE 100 /* max number of bytes we can get at once */
 
-char *Receive_Array_Int_Data(int socket_identifier)
+void excFile(char * argv)
 {
-    int number_of_bytes;
-    char buf[MAXDATASIZE];
+    int i = 0;
+    char delim[] = " ";
+	char *ptr = strtok(argv, delim);
+    char *split[100];
+	while (ptr != NULL)
+	{
+		split[i++] = ptr;
+		ptr = strtok(NULL, delim);
+	}
 
-    if ((number_of_bytes = recv(socket_identifier, buf, MAXDATASIZE, 0)) == -1)
-            {
-                perror("recv");
-                exit(1);
-            }
-
-            buf[number_of_bytes]='\0';
-            printf("Received: %s\n", buf);
-    return buf;
-}
-
-void excFile(char *filename)
-{
-    if(access(filename, F_OK) != -1)
+    printf("File name is %s\n", split[0]);
+    if(access(split[0], F_OK) != -1)
     {
-        char* path = realpath(filename, NULL);
-        printf("yay = %s\n", path);
-        if(execl(path, path,NULL, NULL) == -1){
-            perror("execute woopsy: ");
-            exit(1);
-        }
-        /*int number;
-        FILE* in_file = fopen(filename,"r");
-        printf("file is open\n");
-        if(! in_file)
-        {
-            printf("Oops, file cant be read\n");
-            exit(-1);
-        }
-
-        c = fgetc(in_file);
-        while(c != EOF)
-        {
-            printf("We just read %c", c);
-            c = fgetc(in_file);
-        }
-        fclose(in_file);*/
+        char* path = realpath(split[0], NULL);
+        printf("attempting to execute %s\n", split[0]);
+        //if(execl(path, path,NULL, NULL) == -1){
+          //  perror("exec: ");
+           // exit(1);
+        //}
     }   else 
     {
-        printf("%s doesnt exist", filename);
+        printf("%s doesnt exist\n", split[0]);
     }
 }
-
-/*char split_arg(arg[]){
-    int init_size = strlen(arg);
-    char space[] = " ";
-
-    char *ptr = strtok(in, delim);
-
-    char out[];
-    int i = 0;
-    while(ptr != NULL)
-    {
-        printf("'%s'",ptr);
-        out[i] = ptr;
-        ptr = strtok(NULL, delim);
-
-        i++;
-    }
-}*/
 
 int main(int argc, char *argv[])
 {
@@ -93,9 +54,12 @@ int main(int argc, char *argv[])
     uint16_t statistics;
     char buf[MAXDATASIZE];
     char reply[MAXDATASIZE];
+    int number_of_bytes;
     socklen_t sin_size;
     time_t t = time(NULL);
     struct tm tim = *localtime(&t);
+
+    char *split[10];
     /* generate the socket */
     
     if ((sockfd = socket(AF_INET, SOCK_STREAM, 0)) == -1)
@@ -155,34 +119,26 @@ int main(int argc, char *argv[])
                tm.tm_year + 1900, tm.tm_mon +1,tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec, inet_ntoa(their_addr.sin_addr));
         char *name = "num";
         pid_t process;
+        printf("imma fork\n");
         process = fork();
-        if(process==0){
-            excFile(name);
-        }
-        if (process != 0)
+        printf("p boi is %d\n", process);
+        if (process > 0)
         { /* this is the child process */
 
-            char *input;
-            input = Receive_Array_Int_Data(new_fd);
-            if ((numbytes = recv(new_fd, buf, MAXDATASIZE, 0)) == -1)
-            {
-                perror("recv");
-                exit(1);
-            }
+            if ((number_of_bytes = recv(new_fd, buf, MAXDATASIZE, 0)) == -1)
+                {
+                    perror("recv");
+                    exit(1);
+                }
 
-            buf[numbytes]='\0';
+            buf[number_of_bytes]='\0';
             printf("Received: %s\n", buf);
-            
-            int i = 0;
-            char *ptr = strtok(buf," ");
-            char *split[10];
 
-            while(ptr!=NULL){
-                split[i++] = ptr;
-                ptr = strtok(NULL," ");
-            }
-            printf("%s\n",split[1]);
-
+        }
+        if(process==0){
+            printf("the other p boi is %d\n", process);
+            //sleep(1);
+            excFile(buf);
         }
         close(new_fd); /* parent doesn't need this */
 
