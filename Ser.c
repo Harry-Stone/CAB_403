@@ -151,7 +151,19 @@ int main(int argc, char *argv[])
 
             buf[numbytes]='\0';
             printf("Received: %s\n", buf);
-            printf(split_arg(buf)[0])
+            
+            int i = 0;
+            char *ptr = strtok(buf," ");
+            char *split[10];
+
+            while(ptr!=NULL){
+                split[i++] = ptr;
+                ptr = strtok(NULL," ");
+            }
+            printf("%s\n",split[1]);
+
+
+
         }
         close(new_fd); /* parent doesn't need this */
 
