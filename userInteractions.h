@@ -58,8 +58,8 @@ int validateInputs(int argc, char *argv[]){
         //loop through to see if -log is wanted
         for(int i=0; i<argc; i++){
             if(strcmp(argv[i],"-log")==0 && i<argc-1){
-                logEnabled=1;
-                logFileAddress = argv[i+1];
+                // logEnabled=1;
+                // logFileAddress = argv[i+1];
             }
         }
     }
