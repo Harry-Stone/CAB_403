@@ -13,13 +13,14 @@
 
 #define MAXDATASIZE 100 /* max number of bytes we can get at once */
 
+/*sends the data to the specified soket where the data is a char array*/
 void Send_Array_Data(int socket_id, char *myArray)
 {
     int i = 0;
     uint16_t stat;
     for (int i = 0; i < sizeof(myArray); i++)
     {
-        stat = htons(myArray[i]);
+        stat = htons(myArray[i]); //convert to network format
         if (send(socket_id, &stat, 14, 0) == -1){
             perror("send");
             close(socket_id);
@@ -28,6 +29,7 @@ void Send_Array_Data(int socket_id, char *myArray)
     }
 }
 
+/**/
 void send_command(int socket_id, char *command[]){
     for(int i = 3; i < 15; i++){
         char *ch = " ";
@@ -64,7 +66,7 @@ int main(int argc, char *argv[])
     int port = atoi(argv[2]);
     if ((he = gethostbyname(argv[1])) == NULL)
     { /* get the host info */
-        printf("Could not connect to overseer at %s %s\n", argv[1], argv[2]);
+        sprintf("Could not connect to overseer at %s %s\n", argv[1], argv[2]);
         exit(1);
     }
 

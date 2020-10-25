@@ -1,9 +1,8 @@
 //linked list class blocks for project
-#include<stdio.h>
+#include <stdio.h>
 #include <stddef.h> // for NULL
 #include <stdlib.h> // for EXIT_SUCCESS
 #include <string.h> // for strcmp()
-
 
 #define MAX_FILE_NAME_LENGTH 256
 
@@ -12,7 +11,7 @@ typedef struct job job_t;
 struct job
 {
     char* filename;
-    char* args;
+    char *args[];
 };
 
 typedef struct node node_t;
