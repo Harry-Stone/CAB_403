@@ -19,30 +19,19 @@
 
 #define MAXDATASIZE 100 /* max number of bytes we can get at once */
 
-void excFile(char * argv)
+void excFile(char *in)
 {
-    int i = 0;
-    char delim[] = " ";
-	char *ptr = strtok(argv, delim);
-    char *split[100];
-	while (ptr != NULL)
-	{
-		split[i++] = ptr;
-		ptr = strtok(NULL, delim);
-	}
-
-    printf("File name is %s\n", split[0]);
-    if(access(split[0], F_OK) != -1)
+    if(access(in, F_OK) != -1)
     {
-        char* path = realpath(split[0], NULL);
-        printf("attempting to execute %s\n", split[0]);
-        //if(execl(path, path,NULL, NULL) == -1){
-          //  perror("exec: ");
-           // exit(1);
-        //}
+        printf("attempting to execute %s\n", in);
+        char* path = realpath(in, NULL);
+        if(execl(path, path,NULL, NULL) == -1){
+            perror("exec: ");
+            exit(1);
+        }
     }   else 
     {
-        printf("%s doesnt exist\n", split[0]);
+        printf("%s doesnt exist\n", in);
     }
 }
 
@@ -118,13 +107,7 @@ int main(int argc, char *argv[])
         printf("%d-%02d-%02d %02d:%02d:%02d server: got connection from %s\n",
                tm.tm_year + 1900, tm.tm_mon +1,tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec, inet_ntoa(their_addr.sin_addr));
         char *name = "num";
-        pid_t process;
-        printf("imma fork\n");
-        process = fork();
-        printf("p boi is %d\n", process);
-        if (process > 0)
-        { /* this is the child process */
-
+ 
             if ((number_of_bytes = recv(new_fd, buf, MAXDATASIZE, 0)) == -1)
                 {
                     perror("recv");
@@ -134,12 +117,25 @@ int main(int argc, char *argv[])
             buf[number_of_bytes]='\0';
             printf("Received: %s\n", buf);
 
+            int i = 0;
+            char delim[] = " ";
+            char *ptr = strtok(buf, delim);
+            char *split[100];
+            while (ptr != NULL)
+            {
+                split[i++] = ptr;
+                ptr = strtok(NULL, delim);
+            }
+
+        pid_t process;
+        process = fork();
+        if(process >= 0){
+            if(process==0){
+                //sleep(2);
+                excFile(split[0]);
+            }
         }
-        if(process==0){
-            printf("the other p boi is %d\n", process);
-            //sleep(1);
-            excFile(buf);
-        }
+        printf("It has been executed\n");
         close(new_fd); /* parent doesn't need this */
 
         while (waitpid(-1, NULL, WNOHANG) > 0)
