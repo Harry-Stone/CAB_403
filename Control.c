@@ -15,7 +15,6 @@
 
 void Send_Array_Data(int socket_id, char *myArray)
 {
-    int i = 0;
     uint16_t stat;
     for (int i = 0; i < sizeof(myArray); i++)
     {
@@ -31,10 +30,6 @@ void Send_Array_Data(int socket_id, char *myArray)
 void send_command(int socket_id, char *command[]){
     for(int i = 3; i < 15; i++){
         char *ch = " ";
-        //char *try = command[i];
-        //strcat(try, ch);
-        //printf("please = %s", try);
-        //command[i] = strcat(command[i], " ");
     if(send(socket_id, command[i], strlen(command[i]), 0) < 0){
         perror("send");
         close(socket_id);
@@ -52,10 +47,8 @@ int main(int argc, char *argv[])
 {   
     //this prompts for correct use and shows help if requested
     validateInputs(argc, argv);
-
-    struct sockaddr_in serverAddr;
-    int client_s, numbytes, new_fd;
-    char buf[MAXDATASIZE];
+    
+    int client_s, new_fd;
     struct hostent *he;
     struct sockaddr_in their_addr; /* connector's address information */
     socklen_t sin_size;
@@ -98,19 +91,7 @@ int main(int argc, char *argv[])
         send_command(client_s, argv);
         printf("yes\n\n");
         }
-        //close(new_fd); /* parent doesn't need this */
 
-    //sendMessage(new_fd, "10221450");
-
-    /*if ((numbytes = recv(client_s, buf, MAXDATASIZE, 0)) == -1)
-        {
-            perror("recv");
-            exit(1);
-        }
-
-        buf[numbytes] = '\0';
-
-        printf("Received: %s\n", buf);*/
     close(client_s);
 
     return 0;

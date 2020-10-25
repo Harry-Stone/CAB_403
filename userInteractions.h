@@ -23,7 +23,6 @@ void agressivelyPrintHelp(){ //like help but to stderr
 }
 
 int validateInputs(int argc, char *argv[]){
-    printf("%d ARGS\n\n\n", argc);
     int mode = 0; //mode is set to 1,2 or 3 on output and indicates weather to send an execute, mem or memkill command to set percentages
 
     
@@ -65,6 +64,7 @@ int validateInputs(int argc, char *argv[]){
             if(strcmp(argv[i],"-log")==0 && i<argc-1){ //this was not implimented, but this is where it would be if it were
                 // logEnabled=1;
                 // logFileAddress = argv[i+1];
+                writeLog("You chose to include logs, here is proof that we can get your log arguments with a date", argv[i+1]);
             }
         }
     }

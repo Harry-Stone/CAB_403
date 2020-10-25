@@ -34,16 +34,13 @@ void excFile(char *in, char arg[])
 
 int main(int argc, char *argv[])
 {
-    int sockfd, new_fd, numbytes, pid, ang, kid_pid;            /* listen on sock_fd, new connection on new_fd */
+    int sockfd, new_fd, kid_pid;            /* listen on sock_fd, new connection on new_fd */
     struct sockaddr_in my_addr;    /* my address information */
     struct sockaddr_in their_addr; /* connector's address information */
-    uint16_t statistics;
     char buf[MAXDATASIZE];
-    char reply[MAXDATASIZE];
     int number_of_bytes;
     socklen_t sin_size;
 
-    char *split[10];
     /* generate the socket */
     
     if ((sockfd = socket(AF_INET, SOCK_STREAM, 0)) == -1)
@@ -98,7 +95,6 @@ int main(int argc, char *argv[])
             continue;
         }
         printf("%s server: got connection from %s\n", getDate(), inet_ntoa(their_addr.sin_addr));
-        char *name = "num";
  
             if ((number_of_bytes = recv(new_fd, buf, MAXDATASIZE, 0)) == -1)
                 {
@@ -122,9 +118,6 @@ int main(int argc, char *argv[])
         pid_t process;
         process = fork();
         if(process==0){
-            //sleep(2);
-            int fileloc = find_file(split);
-            printf("7777%s\n", split[fileloc]);
             kid_pid = getpid();
             excFile(split[0], *split);
             

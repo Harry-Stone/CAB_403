@@ -1,9 +1,9 @@
 CFLAGS = -Wall -pedantic # Show all reasonable warnings
 
-TARGET1 = Ser
+TARGET1 = Server
 TARGET2 = Control
 
-TARGETS = Ser Control
+TARGETS = Server Control
 
 # all: $(TARGET1)
 # 	gcc -o $(TARGET1) $(TARGET1).o $(CFLAGS)

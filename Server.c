@@ -132,7 +132,7 @@ int main(int argc, char *argv[])
         }
         else{
             wait(NULL);
-            printf("%s - %s %s has been excevuted with pid %d\n", getDate(), split[0], split[1], kid_pid);
+            printf("%s - %s %s has been executed with pid %d\n", getDate(), split[0], split[1], kid_pid);
         }
         close(new_fd); /* parent doesn't need this */
 
