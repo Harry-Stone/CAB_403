@@ -39,9 +39,13 @@ void excFile(char *filename)
 {
     if(access(filename, F_OK) != -1)
     {
-        char * address = gethostname();
-        char 
-        (execl(buf, basename(buf), res, NULL) == -1)
+        char* path = realpath(filename, NULL);
+        printf("yay = %s\n", path);
+        if(execl(path, path,NULL, NULL) == -1){
+            perror("execute woopsy: ");
+            exit(1);
+        }
+        close
         /*int number;
         FILE* in_file = fopen(filename,"r");
         printf("file is open\n");
@@ -150,37 +154,12 @@ int main(int argc, char *argv[])
         }
         printf("%d-%02d-%02d %02d:%02d:%02d server: got connection from %s\n",
                tm.tm_year + 1900, tm.tm_mon +1,tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec, inet_ntoa(their_addr.sin_addr));
-        char *name = "num.exe";
+        char *name = "num";
         excFile(name);
         if (!fork())
         { /* this is the child process */
-<<<<<<< HEAD
             char *input;
             input = Receive_Array_Int_Data(new_fd);
-=======
-            /*if (send(new_fd, "Hello, world!\n", 14, 0) == -1){
-                perror("send");
-            close(new_fd);
-            exit(0);
-            }*/
-            //printf("Yes2\n");
-            //Receive_Array_Int_Data(new_fd, MAXDATASIZE);
-            //printf("Yes\n");
-            /*for (int i = 0; i < MAXDATASIZE; i++)
-            {
-               printf("Value of index = %s\n", results[1]);
-            }
-            free(results);*/
-            if ((numbytes = recv(new_fd, buf, MAXDATASIZE, 0)) == -1)
-            {
-                perror("recv");
-                exit(1);
-            }
-
-            buf[numbytes]='\0';
-            printf("Received: %s\n", buf);
-            printf(split_arg(buf)[0])
->>>>>>> 5deeaa6984eb16f78315f3279cb649e3d74e3d2d
         }
         close(new_fd); /* parent doesn't need this */
 
