@@ -11,11 +11,19 @@
 #include <time.h>
 
 int find_file(char *in[]){
-    printf("%s\n", in[0]);
     int i = 0;
-    while(strcmp(in[i], "-o") == 0||strcmp(in[i], "-log")==0||strcmp(in[i], "-t")==0){
-        i +=2;
-        printf("%s inside the boi\n",in[i]);
+    if(strcmp(in[i], "-o") == 0||strcmp(in[i], "-log")==0||strcmp(in[i], "-t")==0){
+        i = 2;
+        printf("%1s\n", in[i]);
+        if(strcmp(in[i], "-o") == 0||strcmp(in[i], "-log")==0||strcmp(in[i], "-t")==0){
+            i = 4;
+            printf("2%s\n", in[i]);
+            if(strcmp(in[i], "-o") == 0||strcmp(in[i], "-log")==0||strcmp(in[i], "-t")==0){
+            i = 6;
+            printf("3%s\n", in[i]);
+        }
+        }
+
     }
     return i;
 }

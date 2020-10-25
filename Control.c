@@ -94,23 +94,7 @@ int main(int argc, char *argv[])
             perror("accept");
         }
     if (!fork())
-        { /* this is the child process */
-        printf("Forked");
-        //for(int i=1; i < sizeof(*argv); i++){
-          //  if (send(client_s, argv[2], 14, 0) == -1){
-            //perror("send");
-            //close(new_fd);
-            //exit(0);
-            //}
-        //}
-        /*for (int i = 0; i < sizeof(*argv); i++)
-        {
-            if (send(new_fd, argv, 14, 0) == -1){
-                perror("send");
-                close(new_fd);
-                exit(0);
-            }
-        }*/        
+        { /* this is the child process */      
         send_command(client_s, argv);
         printf("yes\n\n");
         }

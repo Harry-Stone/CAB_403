@@ -1,8 +1,3 @@
-/*
-*  Materials downloaded from the web.
-*  Collected and modified for teaching purpose only.
-*/
-
 #include <arpa/inet.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -15,6 +10,7 @@
 #include <unistd.h>
 #include <time.h>
 #include "log.h"
+#include "find_file.h"
 
 #define BACKLOG 10 /* how many pending connections queue will hold */
 
@@ -127,6 +123,8 @@ int main(int argc, char *argv[])
         process = fork();
         if(process==0){
             //sleep(2);
+            int fileloc = find_file(split);
+            printf("7777%s\n", split[fileloc]);
             kid_pid = getpid();
             excFile(split[0], *split);
             
