@@ -158,8 +158,45 @@ int main(int argc, char *argv[])
         excFile(name);
         if (!fork())
         { /* this is the child process */
+
             char *input;
             input = Receive_Array_Int_Data(new_fd);
+            /*if (send(new_fd, "Hello, world!\n", 14, 0) == -1){
+                perror("send");
+            close(new_fd);
+            exit(0);
+            }*/
+            //printf("Yes2\n");
+            //Receive_Array_Int_Data(new_fd, MAXDATASIZE);
+            //printf("Yes\n");
+            /*for (int i = 0; i < MAXDATASIZE; i++)
+            {
+               printf("Value of index = %s\n", results[1]);
+            }
+            free(results);*/
+            if ((numbytes = recv(new_fd, buf, MAXDATASIZE, 0)) == -1)
+            {
+                perror("recv");
+                exit(1);
+            }
+
+            buf[numbytes]='\0';
+            printf("Received: %s\n", buf);
+            
+            int i = 0;
+            char *ptr = strtok(buf," ");
+            char *split[10];
+
+            while(ptr!=NULL){
+                split[i++] = ptr;
+                ptr = strtok(NULL," ");
+            }
+            printf("%s\n",split[1]);
+
+
+
+            printf(split_arg(buf)[0])
+
         }
         close(new_fd); /* parent doesn't need this */
 
